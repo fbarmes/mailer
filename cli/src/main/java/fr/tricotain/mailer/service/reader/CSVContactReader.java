@@ -18,6 +18,8 @@ import fr.tricotain.mailer.model.Contact;
 public class CSVContactReader implements ContactReader {
 
 	private static final Logger LOGGER = Logger.getLogger(CSVContactReader.class);
+
+	
 	
 	
 	private CSVReader csvReader;
