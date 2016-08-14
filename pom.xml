@@ -5,7 +5,7 @@
 	<groupId>fr.tricotain</groupId>
 	<artifactId>mailer</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>mailer</name>
 	<url>http://maven.apache.org</url>
 
@@ -25,9 +25,9 @@
 	</properties>
 
 	<scm>
-		<url>https://github.com/fbarmes/mailer</url>
-		<connection>scm:git:git://github.com/fbarmes/mailer</connection>
-		<developerConnection>scm:git:git://github.com/fbarmes/mailer</developerConnection>
+		<url>scm:git:fbarmes@github.com:fbarmes/mailer.git</url>
+		<connection>scm:git:fbarmes@github.com:fbarmes/mailer.git</connection>
+		<developerConnection>scm:git:fbarmes@github.com:fbarmes/mailer.git</developerConnection>
 	  <tag>v1.0.0</tag>
   </scm>
 
