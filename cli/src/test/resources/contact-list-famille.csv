@@ -1,0 +1,4 @@
+nomMadame;prenomMadame;nomMonsieur;prenomMonsieur;mobileMadame;mobileMonsieur;numero;adresse;complement;codePostal;ville;eMailFoyer;eMailMadame;eMailMonsieur;enfants
+"XXX";"xxxx";"";"";"01 02";"";"102";"Chemin de";"";"01";"VILLE";"email@example.com";"email@example.com";"";"ONE (01/01/2008)"
+"XXX";"xxx";"YYY";"yyyy";"06 01 01 01 01";"06 02 02 02 02";"361";"Rue";"";"01";"VILLE";"email@example.com";"example@gmail.com";"";"XXXX xyxy (01/01/2006),XXXX yuyuyu (01/01/2010)"
+"XXX";"";"XXX";"yyy";"";"";"";"";"";"01";"VILLE";"";"";"";"XXXX pppp (00/00/0000)"
