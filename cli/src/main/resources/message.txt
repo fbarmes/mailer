@@ -1,5 +1,8 @@
 Bonjour,
 
+eacute : é
+egrave : è
+
 Ceci est un message de test
 
-L'�quipe des sender
+L'équipe des sender

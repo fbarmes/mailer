@@ -24,14 +24,7 @@ public class Config {
 	private String mailAttachmentFilename;
 	
 	private String csvFileName = "";
-	
-	
-	private String csvFileEncoding = "ISO-8859-1";
-	private char csvFileCharacterSeparator = ';';
-	private char csvFileQuoteSeparator =  '"';
-	private int csvFileIndexLastName = 0;
-	private int csvFileIndexFirstName = 1;
-	private int csvFileIndexEmail = 8;
+	private String csvFileFormat = "";	
 	
 	public synchronized static Config getInstance() {
 		if(instance == null) {
@@ -47,6 +40,7 @@ public class Config {
 		LOGGER.info("---");
 		LOGGER.info("General Settings");
 		LOGGER.info("test mode : " + this.testMode);
+		LOGGER.info("test mail address : " + this.testMailAdress);
 		
 		LOGGER.info("---");
 		LOGGER.info("Server Settings");
@@ -56,22 +50,25 @@ public class Config {
 		
 		LOGGER.info("---");
 		LOGGER.info("Message settings");
+		LOGGER.info("Mail message encoding : "+ this.mailMessageFileEncoding);
 		LOGGER.info("From :" + this.mailFrom);
 		LOGGER.info("Subject :" + this.mailSubject);
 
 		LOGGER.info("---");
 		LOGGER.info("contacts");
-		LOGGER.info("contact file :" + this.csvFileName);
-
-		
+		LOGGER.info("contact file format :" + this.csvFileFormat);
+		LOGGER.info("contact file :" + this.csvFileName);		
 	}
 	
 	public void setProperties(Properties props) {
 
 		if(props.containsKey("test.mode")) {
 			String value = props.getProperty("test.mode");
-			this.testMode = Boolean.valueOf(value).booleanValue();
-			
+			this.testMode = Boolean.valueOf(value).booleanValue();			
+		}
+		
+		if(props.containsKey("test.mail.address")) {
+			this.testMailAdress = props.getProperty("test.mail.address");			
 		}
 		
 		if(props.containsKey("smtp.host")) {
@@ -89,11 +86,17 @@ public class Config {
 		if(props.containsKey("mail.subject")) {
 			this.mailSubject = props.getProperty("mail.subject");
 		}
+
+		if(props.containsKey("message.file.encoding")) {
+			this.mailMessageFileEncoding = props.getProperty("message.file.encoding");
+		}
+
+		
+		if(props.containsKey("contact.file.format")) {
+			this.csvFileFormat = props.getProperty("contact.file.format");
+		}
 		
 	}
-	
-	
-	
 	
 	private Config() {
 		super();
@@ -121,40 +124,9 @@ public class Config {
 	}
 
 
-	public String getCsvFileEncoding() {
-		return csvFileEncoding;
-	}
-
-
-	public char getCsvFileCharacterSeparator() {
-		return csvFileCharacterSeparator;
-	}
-
-
-	public char getCsvFileQuoteSeparator() {
-		return csvFileQuoteSeparator;
-	}
-
-
-	public int getCsvFileIndexLastName() {
-		return csvFileIndexLastName;
-	}
-
-
-	public int getCsvFileIndexFirstName() {
-		return csvFileIndexFirstName;
-	}
-
-
-	public int getCsvFileIndexEmail() {
-		return csvFileIndexEmail;
-	}
-
-
 	public String getMailBody() {
 		return mailBody;
 	}
-	
 	
 
 
@@ -172,6 +144,19 @@ public class Config {
 	public void setCsvFileName(String csvFileName) {
 		this.csvFileName = csvFileName;
 	}
+
+	
+	
+	
+	public String getCsvFileFormat() {
+		return csvFileFormat;
+	}
+
+
+	public void setCsvFileFormat(String csvFileFormat) {
+		this.csvFileFormat = csvFileFormat;
+	}
+
 
 	public boolean isTestMode() {
 		return testMode;

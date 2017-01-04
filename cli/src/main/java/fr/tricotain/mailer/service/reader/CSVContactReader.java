@@ -11,42 +11,38 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import au.com.bytecode.opencsv.CSVReader;
-import fr.tricotain.mailer.model.Config;
 import fr.tricotain.mailer.model.Contact;
 
-public class CSVContactReader implements ContactReader {
+import au.com.bytecode.opencsv.CSVReader;
+
+public abstract class CSVContactReader implements ContactReader {
 
 	private static final Logger LOGGER = Logger.getLogger(CSVContactReader.class);
-
-	
-	
 	
 	private CSVReader csvReader;
-	
+
 	public CSVContactReader(String filename) throws IOException {
-		this(new File(filename), Config.getInstance().getCsvFileCharacterSeparator(), Config.getInstance().getCsvFileQuoteSeparator());
+		this(new File(filename));
 	}
-	
 	
 	public CSVContactReader(File file) throws IOException {
-		this(file, Config.getInstance().getCsvFileCharacterSeparator(), Config.getInstance().getCsvFileQuoteSeparator());
-	}
-	
-	public CSVContactReader(File file, char charSeparator, char quoteCharacter) throws IOException {
 		super();	
 		LOGGER.debug("Create FileReader using "+file.getAbsolutePath());
-		InputStreamReader isr = new InputStreamReader(new FileInputStream(file), Config.getInstance().getCsvFileEncoding());
+		InputStreamReader isr = new InputStreamReader(new FileInputStream(file), getCsvFileEncoding());
 		
 		LOGGER.debug("Create csvReader");
-		this.csvReader = new CSVReader(isr, charSeparator, quoteCharacter);
+		this.csvReader = new CSVReader(isr, getCsvCharacterSeparator(), getCsvQuoteSeparator());
 	}
+
 	
-	
-	
+	protected abstract String getCsvFileEncoding();;
+	protected abstract char getCsvCharacterSeparator();
+	protected abstract char getCsvQuoteSeparator();
+	protected abstract Contact getContactFromLineItems(String[] lineItems);
+	protected abstract boolean isShortLine(String[] lineItems);
 	
 	@Override 
-	public List<Contact> readContact() {
+	public final List<Contact> readContact() {
 		try {
 			Map<String, Contact> contactMap = new HashMap<>();
 			
@@ -68,31 +64,21 @@ public class CSVContactReader implements ContactReader {
 				}
 				
 				//--- ignore short line
-				if(lineItems.length <= Config.getInstance().getCsvFileIndexEmail()) {
+				if(isShortLine(lineItems)) {
 					continue;
 				}
 				
 				//--- extract data
-				String firstname = lineItems[Config.getInstance().getCsvFileIndexFirstName()].trim();
-				String lastname = lineItems[Config.getInstance().getCsvFileIndexLastName()].trim();
-				String email = lineItems[Config.getInstance().getCsvFileIndexEmail()].trim();
-				
-				LOGGER.debug("got firstname=["+firstname+"] lastname=["+lastname+"] email=["+email+"]");
-				
-				//--- BR : ignore no-data lines
-				if(email.isEmpty() || (firstname.isEmpty() && lastname.isEmpty()) ) {
-					LOGGER.debug("no-data line -> IGNORE");
+				Contact contact = getContactFromLineItems(lineItems);
+				if(contact == null) {
 					continue;
-				} else {
-					LOGGER.debug("data line -> KEEP");
 				}
 				
-				//--- create contact
-				Contact contact = new Contact(firstname, lastname, email);
-				
 				//--- BR : handle duplicate emails
+				//--- TODO : check
+				String email = contact.getEmail();
 				if(contactMap.containsKey(email)) {
-					contactMap.get(email).addFirstname(", ", firstname);
+					contactMap.get(email).addFirstname(", ", contact.getFirstname());
 				} else {
 					contactMap.put(email, contact);
 				}
@@ -105,5 +91,6 @@ public class CSVContactReader implements ContactReader {
 			return null;
 		}
 	}
+
 	
 }

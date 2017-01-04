@@ -5,13 +5,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import fr.tricotain.mailer.model.BusinessException;
 import fr.tricotain.mailer.model.Config;
 import fr.tricotain.mailer.model.Contact;
 import fr.tricotain.mailer.model.MailMessage;
 import fr.tricotain.mailer.service.mail.MailReport;
 import fr.tricotain.mailer.service.mail.MailSender;
-import fr.tricotain.mailer.service.reader.CSVContactReader;
 import fr.tricotain.mailer.service.reader.ContactReader;
+import fr.tricotain.mailer.service.reader.ContactReaderFactory;
+import fr.tricotain.mailer.service.reader.ContactReaderFormat;
 
 public class Mailer {
 	public static final Logger LOGGER = Logger.getLogger(Mailer.class);
@@ -38,7 +40,15 @@ public class Mailer {
 			Config.getInstance().echoStatus();
 			
 			//--  read contacts
-			ContactReader reader = new CSVContactReader(Config.getInstance().getCsvFileName());
+			String filename = Config.getInstance().getCsvFileName();
+			String fileFormat = Config.getInstance().getCsvFileFormat();
+			
+			ContactReader reader = ContactReaderFactory.getContactReader(ContactReaderFormat.fromString(fileFormat), filename);
+			
+			if(reader == null) {
+				throw new BusinessException("FileReader is null, bad format ("+fileFormat+") or name ("+filename+")");
+			}
+			
 			List<Contact> contacts = reader.readContact();
 			
 			//-- Compose message
@@ -56,6 +66,9 @@ public class Mailer {
 				LOGGER.info(report);
 			}
 		} catch (IOException e) {
+			LOGGER.error("ERROR");
+			LOGGER.error(e);
+		} catch (BusinessException e) {
 			LOGGER.error("ERROR");
 			LOGGER.error(e);
 		}
