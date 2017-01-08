@@ -75,6 +75,7 @@ public class MailSender {
 			Properties properties = System.getProperties();
 			properties.setProperty("mail.smtp.host", SMTP_HOST);
 			properties.setProperty("mail.smtp.port", SMTP_PORT);
+			properties.setProperty("mail.smtp.connectiontimeout	", "10000");
 			
 			Session session = Session.getDefaultInstance(properties);
 			MimeMessage mimeMessage = new MimeMessage(session);
